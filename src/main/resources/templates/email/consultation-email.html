@@ -2,15 +2,77 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Bem-vindo</title>
+    <title th:if="${isNew}">Uma nova consulta foi agendada</title>
+    <title th:if="${!isNew}">Consulta atualizada</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #2c3e50;
+        }
+
+        p {
+            font-size: 16px;
+            color: #34495e;
+            line-height: 1.5;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #1abc9c;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+    </style>
 </head>
 <body>
-<h2>Olá, <span th:text="${name}">Usuário</span>!</h2>
+<div class="container">
+    <div>
+        <h2>
+            <span th:if="${isNew}">Uma nova consulta foi agendada</span>
+            <span th:if="${!isNew}">Consulta atualizada</span>
+        </h2>
+    </div>
 
-<p>Seja bem-vindo ao nosso sistema.</p>
+    <div>
+        <h2>Olá, <span class="highlight" th:text="${name}">Usuário</span>!</h2>
+    </div>
 
-<p>Seu login é: <b th:text="${email}"></b></p>
+    <p th:if="${isNew}">
+        Sua consulta foi agendada para o dia:
+        <span class="highlight" th:text="${consultationDate}"></span> das
+        <span class="highlight" th:text="${startTime}"></span> até
+        <span class="highlight" th:text="${endTime}"></span>.
+    </p>
 
-<p>Atenciosamente,<br/>Equipe Sistema</p>
+    <p th:if="${!isNew}">
+        Sua consulta foi atualizada para o dia:
+        <span class="highlight" th:text="${consultationDate}"></span> das
+        <span class="highlight" th:text="${startTime}"></span> até
+        <span class="highlight" th:text="${endTime}"></span>.
+    </p>
+
+    <p class="footer">
+        Atenciosamente,<br/>Equipe Medi Flow
+    </p>
+</div>
 </body>
 </html>

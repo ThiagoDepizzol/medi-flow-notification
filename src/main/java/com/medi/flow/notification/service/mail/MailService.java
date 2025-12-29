@@ -1,5 +1,6 @@
 package com.medi.flow.notification.service.mail;
 
+import com.medi.flow.notification.dto.consultation.ConsultationEventDTO;
 import jakarta.mail.internet.MimeMessage;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
@@ -24,23 +25,30 @@ public class MailService {
         this.templateEngine = templateEngine;
     }
 
-    public void sendConsultationMail(@NonNull final String email, @NonNull final String name) {
+    public void sendConsultationMail(@NonNull final ConsultationEventDTO dto) {
 
-        logger.info("sendConsultationMail() -> {}, {}", email, name);
+        logger.info("sendConsultationMail() -> {}", dto);
 
         try {
+
             final MimeMessage message = mailSender.createMimeMessage();
             final MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             final Context context = new Context();
-            context.setVariable("name", name);
-            context.setVariable("email", email);
+
+            context.setVariable("name", dto.getPatientName());
+            context.setVariable("email", dto.getPatientEmail());
+            context.setVariable("isNew", dto.getIsNew());
+            context.setVariable("consultationDate", dto.getConsultationDate());
+            context.setVariable("startTime", dto.getStartTime());
+            context.setVariable("endTime", dto.getEndTime());
 
             final String html = templateEngine.process("email/consultation-email", context);
 
-            helper.setTo(email);
-            helper.setSubject("Bem-vindo ao sistema");
+            helper.setTo(dto.getPatientEmail());
+            helper.setSubject(dto.getIsNew() ? "Uma nova consulta foi agendada" : "Consulta atualizada");
             helper.setText(html, true);
+            helper.setFrom("notification.fiap@mediflow.com.br");
 
             mailSender.send(message);
 

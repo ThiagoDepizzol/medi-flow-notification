@@ -23,7 +23,7 @@ public class ConsultationEventListener {
 
         logger.info("listen() -> {}", event);
 
-        mailService.sendConsultationMail(event.getDoctorName(), event.getPatientName());
+        mailService.sendConsultationMail(event);
 
 
     }
